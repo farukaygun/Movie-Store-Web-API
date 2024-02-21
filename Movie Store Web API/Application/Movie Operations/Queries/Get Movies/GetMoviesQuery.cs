@@ -11,10 +11,11 @@ namespace Movie_Store_Web_API.Application.Movie_Operations.Queries.Get_Movies
 		public async Task<List<GetMovieModel>> Handle()
 		{
 			var movies = await context.Movies
-				.Include(x => x.Genres)
-				.Include(x => x.Actors)
-				.Include(x => x.Directors)
-				.OrderBy(x => x.Id).ToListAsync();
+				.Include(m => m.Genres)
+				.Include(m => m.Actors)
+				.Include(m => m.Directors)
+				.OrderBy(m => m.Id)
+				.ToListAsync();
 
 			return mapper.Map<List<GetMovieModel>>(movies);
 		}

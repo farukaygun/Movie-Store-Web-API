@@ -1,12 +1,5 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Movie_Store_Web_API.Application.Actor_Operations.Create;
-using Movie_Store_Web_API.Application.Actor_Operations.Queries.Get_Actor_Detail;
-using Movie_Store_Web_API.Application.Director_Operations.Create;
-using Movie_Store_Web_API.Application.Director_Operations.Queries.Get_Director_Detail;
-using Movie_Store_Web_API.Application.Genre_Operations.Create;
-using Movie_Store_Web_API.Application.Genre_Operations.Queries.Get_Genre_Detail;
 using Movie_Store_Web_API.Db_Operations;
 using Movie_Store_Web_API.Entities;
 
@@ -41,98 +34,46 @@ namespace Movie_Store_Web_API.Application.Movie_Operations.Create
 			return mapper.Map<CreateMovieModel>(movie);
 		}
 
-		private async Task<List<CreateGenreModel>> CheckGenresIfExist()
+		private async Task<List<Genre>> CheckGenresIfExist()
 		{
-			var getGenreValidator = new GetGenreDetailQueryValidator();
-			var createGenreValidator = new CreateGenreCommandValidator();
-			var genres = new List<CreateGenreModel>();
-
+			var genres = new List<Genre>();
 			foreach (var genre in Model.Genres)
 			{
-				CreateGenreModel addedGenre;
-				var genreInDb = await context.Genres
-					.SingleOrDefaultAsync(x => x.Id == Model.Id || x.Name == Model.Name);
+				var existedGenre = await context.Genres
+					.SingleOrDefaultAsync(x => x.Id == genre.Id || x.Name == genre.Name) 
+					?? throw new NullReferenceException($"Genre {genre.Name} not found!");
 
-				// creating new genre if it does not exist
-				if (genreInDb is null)
-				{
-					var newGenre = new CreateGenreModel { Name = genre.Name };
-					var createGenreCommand = new CreateGenreCommand(context, mapper, newGenre);
-					
-					createGenreValidator.ValidateAndThrow(createGenreCommand);
-					newGenre = await createGenreCommand.Handle();
-
-					addedGenre = newGenre;
-				}
-				else addedGenre = mapper.Map<CreateGenreModel>(genreInDb);
-
-				genres.Add(addedGenre);
+				genres.Add(existedGenre);
 			}
 			return genres;
 		}
 
-		private async Task<List<CreateActorModel>> CheckActorsIfExist()
+		private async Task<List<Actor>> CheckActorsIfExist()
 		{
-			var getActorValidator = new GetActorDetailQueryValidator();
-			var createActorValidator = new CreateActorCommandValidator();
-			var actors = new List<CreateActorModel>();
+			var actors = new List<Actor>();
 
 			foreach (var actor in Model.Actors)
 			{
-				CreateActorModel addedActor;
+				var existedActor = await context.Actors
+					.SingleOrDefaultAsync(x => x.Id == actor.Id || (x.Name == actor.Name && x.Surname == actor.Surname))
+					?? throw new NullReferenceException($"Actor {actor.Name} not found!");
 
-				var getActorCommand = new GetActorDetailQuery(context, mapper, actor.Id); 
-
-				getActorValidator.ValidateAndThrow(getActorCommand);
-				var actorInDb = await getActorCommand.Handle();
-
-				// creating new actor if it does not exist
-				if (actorInDb is null)
-				{
-					var newActor = new CreateActorModel { Name = actor.Name, Surname = actor.Surname };
-					var createActorCommand = new CreateActorCommand(context, mapper, newActor);
-					
-					createActorValidator.ValidateAndThrow(createActorCommand);
-					newActor = await createActorCommand.Handle();
-
-					addedActor = newActor;
-				}
-				else addedActor = mapper.Map<CreateActorModel>(actorInDb);
-
-				actors.Add(addedActor);
+				actors.Add(existedActor);
 			}
 			return actors;
 		}
 
-		private async Task<List<CreateDirectorModel>> CheckDirectorsIfExist()
+		private async Task<List<Director>> CheckDirectorsIfExist()
 		{
-			var getDirectorValidator = new GetDirectorDetailQueryValidator();
-			var createDirectorValidator = new CreateDirectorCommandValidator();
-			var directors = new List<CreateDirectorModel>();
+			var directors = new List<Director>();
 
 			foreach (var director in Model.Directors)
 			{
-				CreateDirectorModel addedDirector;
+				var existedDirector = await context.Directors
+					.SingleOrDefaultAsync(x => x.Id == director.Id || (x.Name == director.Name && x.Surname == director.Surname))
+					?? throw new NullReferenceException($"Director {director.Name} not found!");
 
-				var getDirectorCommand = new GetDirectorDetailQuery(context, mapper, director.Id); 
-
-				getDirectorValidator.ValidateAndThrow(getDirectorCommand);
-				var directorInDb = await getDirectorCommand.Handle();
-
-				// creating new director if it does not exist
-				if (directorInDb is null)
-				{
-					var newDirector = new CreateDirectorModel { Name = director.Name, Surname = director.Surname };
-					var createDirectorCommand = new CreateDirectorCommand(context, mapper, newDirector);
-					
-					createDirectorValidator.ValidateAndThrow(createDirectorCommand);
-					newDirector = await createDirectorCommand.Handle();
-
-					addedDirector = newDirector;
-				}
-				else addedDirector = mapper.Map<CreateDirectorModel>(directorInDb);
-
-				directors.Add(addedDirector);
+				directors.Add(existedDirector);
 			}
 			return directors;
 		}

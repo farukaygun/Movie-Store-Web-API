@@ -11,7 +11,7 @@ using Movie_Store_Web_API.Db_Operations;
 namespace Movie_Store_Web_API.Migrations
 {
     [DbContext(typeof(MovieStoreDbContext))]
-    [Migration("20240219121942_Init")]
+    [Migration("20240221080048_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -153,6 +153,9 @@ namespace Movie_Store_Web_API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Year")

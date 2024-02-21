@@ -11,8 +11,8 @@ namespace Movie_Store_Web_API.Application.Actor_Operations.Queries.Get_Actors
 		public async Task<List<GetActorModel>> Handle()
 		{
 			var actors = await context.Actors
-				.Include(x => x.Movies)
-				.OrderBy(x => x.Id).ToListAsync();
+				.OrderBy(a => a.Id)
+				.ToListAsync();
 
 			return mapper.Map<List<GetActorModel>>(actors);
 		}

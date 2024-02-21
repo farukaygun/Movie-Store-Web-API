@@ -6,7 +6,7 @@ namespace Movie_Store_Web_API.Application.Genre_Operations.Queries.Get_Genre_Det
 	{
 		public GetGenreDetailQueryValidator()
 		{
-			RuleFor(x => x.Model.Id).GreaterThan(0);
+			RuleFor(x => x.Id).GreaterThan(0);
 		}
 	}
 }

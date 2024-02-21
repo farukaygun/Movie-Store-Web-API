@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Movie_Store_Web_API.Application.Actor_Operations.Create;
 using Movie_Store_Web_API.Application.Actor_Operations.Queries.Get_Actor_Detail;
 using Movie_Store_Web_API.Application.Actor_Operations.Queries.Get_Actors;
+using Movie_Store_Web_API.Application.Actor_Operations.Update;
 using Movie_Store_Web_API.Db_Operations;
 
 namespace Movie_Store_Web_API.Controllers
@@ -38,13 +40,25 @@ namespace Movie_Store_Web_API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public IActionResult GetById(int id)
+		public async Task<IActionResult> GetById(int id)
 		{
 			var command = new GetActorDetailQuery(context, mapper, id);
 			var validator = new GetActorDetailQueryValidator();
 
 			validator.ValidateAndThrow(command);
-			var actor = command.Handle();
+			var actor = await command.Handle();
+
+			return Ok(actor);
+		}
+
+		[HttpPatch("{id}")]
+		public async Task<IActionResult> Update(int id, [FromBody] JsonPatchDocument<PatchActorModel> patch)
+		{
+			var command = new PatchActorCommand(context, mapper, id, patch);
+			var validator = new PatchActorCommandValidator();
+
+			validator.ValidateAndThrow(command);
+			var actor = await command.Handle();
 
 			return Ok(actor);
 		}

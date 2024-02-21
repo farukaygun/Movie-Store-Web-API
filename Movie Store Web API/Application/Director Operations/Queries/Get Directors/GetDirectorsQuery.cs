@@ -11,8 +11,8 @@ namespace Movie_Store_Web_API.Application.Director_Operations.Queries.Get_Direct
 		public async Task<List<GetDirectorModel>> Handle()
 		{
 			var directors = await context.Directors
-				.Include(x => x.Movies)
-				.OrderBy(x => x.Id).ToListAsync();
+				.OrderBy(d => d.Id)
+				.ToListAsync();
 
 			return mapper.Map<List<GetDirectorModel>>(directors);
 		}

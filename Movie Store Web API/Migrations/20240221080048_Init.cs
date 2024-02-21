@@ -79,6 +79,7 @@ namespace Movie_Store_Web_API.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Year = table.Column<int>(type: "INTEGER", nullable: false),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
                     CustomerId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>

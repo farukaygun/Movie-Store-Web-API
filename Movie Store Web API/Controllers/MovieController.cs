@@ -38,13 +38,13 @@ namespace Movie_Store_Web_API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public IActionResult GetById(int id)
+		public async Task<IActionResult> GetById(int id)
 		{
 			var command = new GetMovieDetailQuery(context, mapper, id);
 			var validator = new GetMovieDetailQueryValidator();
 
 			validator.ValidateAndThrow(command);
-			var movie = command.Handle();
+			var movie = await command.Handle();
 
 			return Ok(movie);
 		}

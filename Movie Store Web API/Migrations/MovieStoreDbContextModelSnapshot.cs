@@ -152,6 +152,9 @@ namespace Movie_Store_Web_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Year")
                         .HasColumnType("INTEGER");
 

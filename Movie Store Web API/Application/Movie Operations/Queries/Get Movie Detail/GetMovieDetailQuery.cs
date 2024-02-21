@@ -14,10 +14,10 @@ namespace Movie_Store_Web_API.Application.Movie_Operations.Queries.Get_Movie_Det
 		public async Task<GetMovieModel> Handle()
 		{
 			var movie = await context.Movies
-				.Include(x => x.Genres)
-				.Include(x => x.Actors)
-				.Include(x => x.Directors)
-				.SingleOrDefaultAsync(x => x.Id == Id);
+				.Include(m => m.Genres)
+				.Include(m => m.Actors)
+				.Include(m => m.Directors)
+				.SingleOrDefaultAsync(m => m.Id == Id);
 
 			return movie is not null ? mapper.Map<GetMovieModel>(movie) : throw new InvalidOperationException("Movie not found!");
 		}

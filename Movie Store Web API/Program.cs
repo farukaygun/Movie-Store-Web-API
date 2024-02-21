@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Movie_Store_Web_Api.Middlewares;
 using Movie_Store_Web_Api.Services;
 using Movie_Store_Web_API.Db_Operations;
@@ -50,12 +51,40 @@ builder.Services.AddScoped<IMovieStoreDbContext>(provider => provider.GetService
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
 	options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+	options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+	opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Movie Store Web API", Version = "v1" });
+	opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		In = ParameterLocation.Header,
+		Description = "Please enter token",
+		Name = "Authorization",
+		Type = SecuritySchemeType.Http,
+		BearerFormat = "JWT",
+		Scheme = "bearer"
+	});
+
+	opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecurityScheme
+			{
+				Reference = new OpenApiReference
+				{
+					Type=ReferenceType.SecurityScheme,
+					Id="Bearer"
+				}
+			},
+			Array.Empty<string>()
+		}
+	});
+});
 
 var app = builder.Build();
 
