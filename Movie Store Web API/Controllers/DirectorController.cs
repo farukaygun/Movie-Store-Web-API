@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Movie_Store_Web_API.Application.Director_Operations.Create;
 using Movie_Store_Web_API.Application.Director_Operations.Queries.Get_Director_Detail;
 using Movie_Store_Web_API.Application.Director_Operations.Queries.Get_Directors;
+using Movie_Store_Web_API.Application.Director_Operations.Update;
 using Movie_Store_Web_API.Db_Operations;
 
 namespace Movie_Store_Web_API.Controllers
@@ -47,6 +49,18 @@ namespace Movie_Store_Web_API.Controllers
 			var director = await command.Handle();
 
 			return Ok(director);
+		}
+
+		[HttpPatch("{id}")]
+		public async Task<IActionResult> Update(int id, [FromBody] JsonPatchDocument<PatchDirectorModel> patch)
+		{
+			var command = new PatchDirectorCommand(context, mapper, id, patch);
+			var validator = new PatchDirectorCommandValidator();
+
+			validator.ValidateAndThrow(command);
+			var model = await command.Handle();
+
+			return Ok(model);
 		}
 	}
 }

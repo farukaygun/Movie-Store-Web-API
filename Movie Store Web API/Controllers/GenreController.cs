@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Movie_Store_Web_API.Application.Genre_Operations.Create;
 using Movie_Store_Web_API.Application.Genre_Operations.Queries.Get_Genre_Detail;
 using Movie_Store_Web_API.Application.Genre_Operations.Queries.Get_Genres;
+using Movie_Store_Web_API.Application.Genre_Operations.Update;
 using Movie_Store_Web_API.Db_Operations;
 
 namespace Movie_Store_Web_API.Controllers
@@ -47,6 +49,18 @@ namespace Movie_Store_Web_API.Controllers
 			var genre = await command.Handle();
 
 			return Ok(genre);
+		}
+
+		[HttpPatch("{id}")]
+		public async Task<IActionResult> Update(int id, [FromBody] JsonPatchDocument<PatchGenreModel> patch)
+		{
+			var command = new PatchGenreCommand(context, mapper, id, patch);
+			var validator = new PatchGenreCommandValidator();
+
+			validator.ValidateAndThrow(command);
+			var model = await command.Handle();
+
+			return Ok(model);
 		}
 	}
 }
