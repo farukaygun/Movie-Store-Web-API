@@ -8,6 +8,8 @@ using Movie_Store_Web_API.Application.Genre_Operations.Create;
 using Movie_Store_Web_API.Application.Genre_Operations.Queries.Get_Genres;
 using Movie_Store_Web_API.Application.Movie_Operations.Create;
 using Movie_Store_Web_API.Application.Movie_Operations.Queries.Get_Movies;
+using Movie_Store_Web_API.Application.Order.Create;
+using Movie_Store_Web_API.Application.Order.Queries.Get_Orders;
 using Movie_Store_Web_API.Entities;
 
 namespace Movie_Store_Web_API.Common
@@ -28,6 +30,9 @@ namespace Movie_Store_Web_API.Common
 			CreateMap<Director, GetDirectorModel>().ReverseMap();
 
 			CreateMap<Actor, PatchActorModel>().ReverseMap();
+		
+			CreateMap<Order, CreateOrderModel>().ReverseMap();
+			CreateMap<Order, GetOrderModel>().ReverseMap();
 		}
 	}
 }
