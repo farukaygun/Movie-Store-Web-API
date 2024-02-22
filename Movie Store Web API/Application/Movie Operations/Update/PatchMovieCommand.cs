@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Movie_Store_Web_API.Application.Actor_Operations.Update;
 using Movie_Store_Web_API.Application.Director_Operations.Update;
+using Movie_Store_Web_API.Application.Genre_Operations.Update;
 using Movie_Store_Web_API.Db_Operations;
 
 namespace Movie_Store_Web_API.Application.Movie_Operations.Update

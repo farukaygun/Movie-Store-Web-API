@@ -8,5 +8,7 @@
 		public required string Password { get; set; }
 		public ICollection<Movie> OrderedMovies { get; set; } = [];
 		public ICollection<Genre> FavoriteGenres { get; set; } = [];
+		public string? RefreshToken { get; set; }
+		public DateTime? RefreshTokenExpiryTime { get; set; }
 	}
 }
