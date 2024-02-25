@@ -13,8 +13,8 @@ namespace Movie_Store_Web_API.Application.Order.Create
 		public CreateOrderModel Model { get; set; } = model;
 		public async Task<CreateOrderModel> Handle()
 		{
-			var customer = CheckCustomerIfExist();
-			var movies = CheckMoviesIfExist();
+			var customer = await CheckCustomerIfExist();
+			var movies = await CheckMoviesIfExist();
 
 			var order = mapper.Map<Order>(Model);
 			order.Customer = mapper.Map<Customer>(customer);
@@ -31,11 +31,9 @@ namespace Movie_Store_Web_API.Application.Order.Create
 		{
 			var customer = await context.Customers
 				.SingleOrDefaultAsync(c => c.Id == Model.Customer.Id)
-				?? throw new InvalidOperationException("Customer not found!");
+				?? throw new NullReferenceException($"Customer {Model.Customer.Name} {Model.Customer.Name} not found!");
 
 			return customer;
-
-
 		}
 
 		private async Task<List<Movie>> CheckMoviesIfExist()
@@ -56,9 +54,18 @@ namespace Movie_Store_Web_API.Application.Order.Create
 
 	public class CreateOrderModel
 	{
-		public required Customer Customer { get; set; }
+		public required CustomerOrderModel Customer { get; set; }
 		public required ICollection<Movie> Movies { get; set; }
 		public required double Price { get; set; }
 		public DateTime? Date { get; set; }	
+	}
+
+	public class CustomerOrderModel
+	{
+		public int? Id { get; set; }
+		public string? Name { get; set; }
+		public string? Surname { get; set; }
+		public string? Email { get; set; }
+		public string? Password { get; set; }
 	}
 }

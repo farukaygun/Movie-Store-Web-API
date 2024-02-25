@@ -13,6 +13,8 @@ namespace Movie_Store_Web_API.Application.Order.Queries.Get_Orders
 		{
 			var orders = await context.Orders
 				.Where(o => o.Customer.Id == customerId)
+				.Include(o => o.Customer)
+				.Include(o => o.Movies)
 				.OrderBy(o => o.Id)
 				.ToListAsync();
 
